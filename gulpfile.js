@@ -64,3 +64,6 @@ gulp.task('build', ['clean'], function(){
 gulp.task('default', ['build', 'scripts', 'styles', 'images'], function(){
     gulp.start(['watchFile', 'sync']);
 });
+// gulp.task('default', ['build'], function(){
+//     gulp.start(['watchFile', 'sync']);
+// });
