@@ -5,7 +5,7 @@ const gulp = require('gulp'),
     rename = require('gulp-rename'),
   cleanCSS = require('gulp-clean-css'),
       maps = require('gulp-sourcemaps'),
-     image = require('gulp-image'),
+     imagemin = require('gulp-imagemin'),
        del = require('del'),
 browserSync = require('browser-sync').create();
 
@@ -35,35 +35,29 @@ gulp.task('styles', function(){
 });
 
 gulp.task('images', function(){
-    return gulp.src('images/**')
-    .pipe(image())
+    return gulp.src('images/*')
+    .pipe(imagemin())
     .pipe(gulp.dest('dist/content'));
 });
 
 gulp.task('clean', function(){
-    return del(['dist/**', '!dist']);   
+    return del(['dist/*', '!dist']);   
 });
 
-gulp.task('sync', function() {
+gulp.task('build', ['clean', 'images', 'scripts', 'styles'], function(){
+    return console.log('img is return');
+});
+
+gulp.task('default', ['sync'], function(){
+
+});
+
+gulp.task('sync', ['build'],function() {
     browserSync.init({
         server: {
             baseDir: "./"
         }
     });
+    gulp.watch('sass/**/*.sass', ['build']);
+    gulp.watch("*.html").on('change', browserSync.reload);
 });
-
-//for extra credit
-gulp.task('watchFile', function(){
-    gulp.watch('sass/**/**/**', ['styles']);
-});
-
-gulp.task('build', ['clean'], function(){
-    gulp.start(['scripts', 'styles', 'images']);
-});
-
-gulp.task('default', ['build', 'scripts', 'styles', 'images'], function(){
-    gulp.start(['watchFile', 'sync']);
-});
-// gulp.task('default', ['build'], function(){
-//     gulp.start(['watchFile', 'sync']);
-// });
